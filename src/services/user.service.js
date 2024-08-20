@@ -1,6 +1,7 @@
 import User from "../models/user.model";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import { sendMail } from "../utils/sendMail";
 
 const user = [];
 
@@ -47,5 +48,18 @@ export const signin = async (body) => {
 };
 
 export const forgetPassword = async (body) => {
-  
+  user.forEach((ele) => {
+    if(body.email === ele.email){
+      data = ele;
+    }
+  })
+  if(!data){
+    throw new Error('No email found!')
+  }
+  const token = jwt.sign({ email: data.email }, "to-reset-password", {
+    expiresIn: "15m",
+  });
+
+  await sendMail(data.email, token)
+  return user
 };

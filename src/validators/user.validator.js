@@ -39,3 +39,19 @@ export const signinValidator = (req, res, next) => {
     next();
   }
 };
+
+export const emailValidator = (req, res, next) => {
+  const schema = Joi.object({
+    email: Joi.string().email().required()
+  });
+  const { error, value } = schema.validate(req.body);
+  if (error) {
+    res.status(HttpStatus.BAD_REQUEST).json({
+      code: HttpStatus.BAD_REQUEST,
+      error: error.message
+  })
+  } else {
+    req.validatedBody = value;
+    next();
+  }
+};
