@@ -8,11 +8,13 @@ export const pollgames = async (req, res, next) => {
     res.setHeader('Connection', 'keep-alive');
 
     const sendEvent = (data) => {
+      console.log("string-->",JSON.stringify(data));
       res.write(`data: ${JSON.stringify(data)}\n\n`);
     };
 
-    const intervalId = await setInterval(() => {
-      const data =GameService.getGameUpdates();
+    const intervalId =await setInterval(() => {
+      const data =GameService.getGameUpdates(req.body.boardId);
+      console.log(data);
       sendEvent(data);
     }, 2000);
 
@@ -40,6 +42,22 @@ export const getgames = async (req, res, next) => {
           error: error.message
       })
     };
+};
+
+export const getboard = async (req, res, next) => {
+  try {
+      const data = await GameService.getboard(req.body.boardId);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data: data,
+        message: 'fetched board successfully'
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        error: error.message
+    })
+  };
 };
 
 export const movegames = async (req, res, next) => {

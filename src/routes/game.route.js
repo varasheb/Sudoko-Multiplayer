@@ -8,8 +8,11 @@ router.get('/pollgames', gameController.pollgames);
 
 router.get('/getgames', userAuth, gameController.getgames);
 
+router.get('/getboard', userAuth, gameController.getboard);
+
 router.post('/move', userAuth , gameController.movegames);
 
 router.post('/undo', userAuth, gameController.undoMove);
 
 export default router;
+

@@ -3,8 +3,8 @@ import Games from '../models/games.models';
 const games=Games;
 const moves={}
 
-export const getGameUpdates = async () => {
-    return games;
+export const getGameUpdates = async (boardId) => {
+    return games[boardId];
   };
 
   export const getgames = async () => {
@@ -35,12 +35,12 @@ export const getGameUpdates = async () => {
   };
   
 
-  export const movegame = async ({ bordId, row ,coloum, value }) => {
-    if (!games[bordId]) {
+  export const movegame = async ({ boardId, row ,coloum, value }) => {
+    if (!games[boardId]) {
       throw new Error('Board not found');
     }
   
-    const board = games[bordId];
+    const board = games[boardId];
     const [i, j] = [row , coloum]
     const position=[row , coloum]
   
@@ -51,31 +51,35 @@ export const getGameUpdates = async () => {
 
     board[i][j] = value;
   
-    if (!moves[bordId]) {
-      moves[bordId] = [];
+    if (!moves[boardId]) {
+      moves[boardId] = [];
     }
-    moves[bordId].push({ position, value });
+    moves[boardId].push({ position, value });
   
     return board;
   };
   
-  export const undoMove = async (bordId) => {
-    if (!games[bordId]) {
+  export const undoMove = async (boardId) => {
+    if (!games[boardId]) {
       throw new Error('Board not found');
     }
   
-    if (!moves[bordId] || moves[bordId].length === 0) {
+    if (!moves[boardId] || moves[boardId].length === 0) {
       throw new Error('No moves to undo');
     }
   
-    const lastMove = moves[bordId].pop();
+    const lastMove = moves[boardId].pop();
     const { position } = lastMove;
   
-    const board = games[bordId];
+    const board = games[boardId];
     const [i, j] = position;
   
     board[i][j] = 0;
     return board;
+  };
+
+  export const getboard = async (boardId) => {
+    return games[boardId];
   };
   
 
