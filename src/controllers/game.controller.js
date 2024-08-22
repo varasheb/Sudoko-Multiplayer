@@ -1,30 +1,20 @@
 import HttpStatus from 'http-status-codes';
 import * as GameService from '../services/game.service';
 
-export const pollgames = async (req, res, next) => {
+export const createnewgame = async (req, res, next) => {
   try {
-    res.setHeader('Content-Type', 'text/event-stream');
-    res.setHeader('Cache-Control', 'no-cache');
-    res.setHeader('Connection', 'keep-alive');
-
-    const sendEvent = (data) => {
-      console.log("string-->",JSON.stringify(data));
-      res.write(`data: ${JSON.stringify(data)}\n\n`);
-    };
-
-    const intervalId =await setInterval(() => {
-      const data =GameService.getGameUpdates(req.body.boardId);
-      console.log(data);
-      sendEvent(data);
-    }, 2000);
-
-    req.on('close', () => {
-      clearInterval(intervalId);
-      res.end();
+    const data = await GameService.createnewgame(req.body);
+    res.status(HttpStatus.OK).json({
+      code: HttpStatus.OK,
+      data: data,
+      message: 'Board Generated successfully'
     });
   } catch (error) {
-    next(error); 
-  }
+    res.status(HttpStatus.BAD_REQUEST).json({
+      code: HttpStatus.BAD_REQUEST,
+      error: error.message
+  })
+};
 };
 
 
@@ -60,9 +50,9 @@ export const getboard = async (req, res, next) => {
   };
 };
 
-export const movegames = async (req, res, next) => {
+export const updatemove = async (req, res, next) => {
     try {
-        const data = await GameService.movegame(req.body);
+        const data = await GameService.updatemove(req.body);
         res.status(HttpStatus.OK).json({
           code: HttpStatus.OK,
           data: data,
@@ -78,7 +68,7 @@ export const movegames = async (req, res, next) => {
 
 export const undoMove = async (req, res, next) => {
     try {
-        const data = await GameService.undoMove(req.body.bordId);
+        const data = await GameService.undoMove(req.body);
         res.status(HttpStatus.OK).json({
           code: HttpStatus.OK,
           data: data,
@@ -90,4 +80,20 @@ export const undoMove = async (req, res, next) => {
           error: error.message
       })
     };
+};
+
+export const getscores = async (req, res, next) => {
+  try {
+      const data = await GameService.getscores(req.body);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data: data,
+        message: 'fetched scores Successfully'
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        error: error.message
+    })
+  };
 };

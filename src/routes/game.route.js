@@ -4,15 +4,20 @@ import { userAuth } from '../middlewares/auth.middleware';
 
 const router = express.Router();
 
-router.get('/pollgames', gameController.pollgames);
-
 router.get('/getgames', userAuth, gameController.getgames);
+
+router.get('/score', userAuth, gameController.getscores);
+
+router.post('/newgame', userAuth , gameController.createnewgame);
 
 router.get('/getboard', userAuth, gameController.getboard);
 
-router.post('/move', userAuth , gameController.movegames);
+router.post('/move', userAuth , gameController.updatemove);
 
 router.post('/undo', userAuth, gameController.undoMove);
+
+
+
 
 export default router;
 
