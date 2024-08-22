@@ -25,7 +25,6 @@ export const updatemove = async ({ boardId, row ,coloum, value,email }) => {
     throw new Error('Board not found');
   }
   const board = games[boardId].board;
-  console.log(board);
   const [i, j] = [row , coloum]
 
   if (!isValidSudokuMove(board,i,j, value)) {
@@ -53,16 +52,17 @@ export const undoMove = async ({boardId,email}) => {
   }
 
   const lastMove = moves[boardId].pop();
-  const { row,coloum,email:usermail } = lastMove;
+  const { i,j,email:usermail } = lastMove;
 
   if(!usermail===email){
     throw new Error("No moves to undo");
 
   }
+  const board = games[boardId].board;
+  console.log(games[boardId].board);
 
-  const board = games[boardId];
-
-  board[row][coloum] = 0;
+  board[i][j] = 0;
+  
   return board;
 };
 
