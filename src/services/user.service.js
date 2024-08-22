@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const user=[];
+const key='varshab111';
 
 export const getUserInfo = async (email) => {
   let data;
@@ -40,7 +41,7 @@ export const signin = async (body) => {
   if(!data||!(await bcrypt.compare(body.password, data.password))){
     throw new Error("Email and password doesnot match");
   }
-  const token = jwt.sign({ email:data.email }, 'your-secret-key', { expiresIn: '1h' });
+  const token = jwt.sign({ email:data.email }, key);
 
   return  token ;
 

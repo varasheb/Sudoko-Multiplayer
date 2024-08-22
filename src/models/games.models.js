@@ -1,5 +1,4 @@
 export const isValidSudokuMove = (board,row,col, value) => {
-    
     for (let x = 0; x < 9; x++) {
         if (board[row][x] === value || board[x][col] === value) {
             return false;
@@ -13,7 +12,6 @@ export const isValidSudokuMove = (board,row,col, value) => {
             if (board[i][j] === value) return false;
         }
     }
-    
     return true;
 };
 

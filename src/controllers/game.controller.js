@@ -36,7 +36,8 @@ export const getgames = async (req, res, next) => {
 
 export const getboard = async (req, res, next) => {
   try {
-      const data = await GameService.getboard(req.body.boardId);
+    console.log(req.params.id);
+      const data = await GameService.getboard(req.params.id);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         data: data,

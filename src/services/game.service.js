@@ -10,26 +10,27 @@ export const createnewgame = async ({ boardId, level ,email }) => {
   }
   const board= generateBoard(level);
   games[boardId]= {email,board};
-  //score[boardId][email] = 0; 
   return {boardId:boardId,board:games[boardId]}
 };
 
 export const getgames = async () => {
-  console.log(Object.keys(games));
   return Object.keys(games);
 };
 
 
 
-export const updatemove = async ({ boardId, row, coloum, value ,email}) => {
+export const updatemove = async ({ boardId, row ,coloum, value,email }) => {
+  console.log(email);
   if (!games[boardId]) {
-    throw new Error("Board not found");
+    throw new Error('Board not found');
   }
-  const board = games[boardId];
-  const [i, j] = [row, coloum];
+  const board = games[boardId].board;
+  console.log(board);
+  const [i, j] = [row , coloum]
 
-  if (!isValidSudokuMove(board,row,coloum, value)) {
-    throw new Error("Invalid move according to Sudoku rules");
+  if (!isValidSudokuMove(board,i,j, value)) {
+    board[i][j] = value;
+    throw new Error('Invalid move according to Sudoku rules');
   }
 
   board[i][j] = value;
@@ -37,8 +38,8 @@ export const updatemove = async ({ boardId, row, coloum, value ,email}) => {
   if (!moves[boardId]) {
     moves[boardId] = [];
   }
-  moves[boardId].push({ email, row , coloum, value });
-  score[email] = (score[email] || 0) + 10;
+  moves[boardId].push({ i,j, value ,email});
+
   return board;
 };
 
@@ -60,9 +61,8 @@ export const undoMove = async ({boardId,email}) => {
   }
 
   const board = games[boardId];
-  const [i, j] = [row,coloum];
 
-  board[i][j] = 0;
+  board[row][coloum] = 0;
   return board;
 };
 
@@ -80,5 +80,4 @@ export const getscores = async ({email}) => {
     return 0
   }
   return point
-
 };
