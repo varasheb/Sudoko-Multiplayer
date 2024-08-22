@@ -17,6 +17,14 @@ export const getgames = async () => {
   return Object.keys(games);
 };
 
+export const gethistory = async (email,boardId) => {
+  const history=moves[boardId]
+  if(!history){
+    throw new Error('No History is present')
+  }
+  return history;
+};
+
 
 
 export const updatemove = async ({ boardId, row ,coloum, value,email }) => {
@@ -59,7 +67,6 @@ export const undoMove = async ({boardId,email}) => {
 
   }
   const board = games[boardId].board;
-  console.log(games[boardId].board);
 
   board[i][j] = 0;
   
