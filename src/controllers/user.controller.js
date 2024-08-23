@@ -5,7 +5,7 @@ import * as UserService from '../services/user.service';
 
 export const getUserInfo = async (req, res, next) => {
   try {
-    const data = await UserService.getUserInfo(req.body.email);
+    const data = await UserService.getuserInfo(req.body.email);
     res.status(HttpStatus.OK).json({
       code: HttpStatus.OK,
       data: data,
