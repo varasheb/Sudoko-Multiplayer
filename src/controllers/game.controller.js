@@ -101,11 +101,27 @@ export const getscores = async (req, res, next) => {
 
 export const gethistory = async (req, res, next) => {
   try {
-      const data = await GameService.gethistory(req.body.email,req.params.id);
+      const data = await GameService.gethistory(req.params.id);
       res.status(HttpStatus.OK).json({
         code: HttpStatus.OK,
         data: data,
         message: 'fetched history Successfully'
+      });
+    } catch (error) {
+      res.status(HttpStatus.BAD_REQUEST).json({
+        code: HttpStatus.BAD_REQUEST,
+        error: error.message
+    })
+  };
+};
+
+export const deleteGame = async (req, res, next) => {
+  try {
+      const data = await GameService.deleteGame(req.body.email,req.params.id);
+      res.status(HttpStatus.OK).json({
+        code: HttpStatus.OK,
+        data: data,
+        message: 'current game deleted.!'
       });
     } catch (error) {
       res.status(HttpStatus.BAD_REQUEST).json({
