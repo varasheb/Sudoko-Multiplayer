@@ -1,48 +1,36 @@
-import User from '../models/user.model';
+import user from '../models/user.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import sequelize, { DataTypes } from '../config/database';
 
-const user=[];
+const User= require('../models/user.model')(sequelize, DataTypes);
+
 const key='varshab111';
 
-export const getUserInfo = async (email) => {
-  let data;
-  user.forEach(ele=>{
-    if(ele.email==email){
-      data=ele
-    }
-  })
-  if(!data)
+export const getuserInfo = async (email) => {
+
+  const user = await User.findOne({ where: { email } });
+  if(!user)
   throw new Error("Invalid Token payload");
-return data
+  return user
 };
 
 //create new user
 export const signup = async (body) => {
-  user.forEach(ele=>{
-    if(body.email==ele.email){
-      throw new Error("User Already Exist")
-    }
-  })
+  const user = await User.findOne({ where: { email:body.email } });
+  if(user)
+  throw new Error('user Aleady Exist')
   body.password= await bcrypt.hash(body.password,10)
-  const data = new User(body);
-  user.push(data)
+  const data = await User.create(body);
   return data;
 };
 
-//create new user
 export const signin = async (body) => {
-  let data;
-  user.forEach(ele=>{
-    if(body.email===ele.email){
-      data=ele
-    }
-  })
-  if(!data||!(await bcrypt.compare(body.password, data.password))){
+  const user = await User.findOne({ where: { email:body.email } });
+  if(!user||!(await bcrypt.compare(body.password, user.password))){
     throw new Error("Email and password doesnot match");
   }
-  const token = jwt.sign({ email:data.email }, key);
-
+  const token = jwt.sign({ email:user.email }, key);
   return  token ;
 
 };
