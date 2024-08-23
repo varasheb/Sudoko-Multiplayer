@@ -1,7 +1,5 @@
-import HttpStatus from 'http-status-codes';
-import * as UserService from '../services/user.service';
-
-
+import HttpStatus from "http-status-codes";
+import * as UserService from "../services/user.service";
 
 export const getUserInfo = async (req, res, next) => {
   try {
@@ -9,16 +7,15 @@ export const getUserInfo = async (req, res, next) => {
     res.status(HttpStatus.OK).json({
       code: HttpStatus.OK,
       data: data,
-      message: 'User fetched successfully'
+      message: "User fetched successfully",
     });
   } catch (error) {
     res.status(HttpStatus.BAD_REQUEST).json({
       code: HttpStatus.BAD_REQUEST,
-      error: error.message
-  })
+      error: error.message,
+    });
   }
 };
-
 
 export const signup = async (req, res, next) => {
   try {
@@ -26,15 +23,15 @@ export const signup = async (req, res, next) => {
     res.status(HttpStatus.OK).json({
       code: HttpStatus.OK,
       data: data,
-      message: 'User created successfully'
+      message: "User created successfully",
     });
   } catch (error) {
     res.status(HttpStatus.CONFLICT).json({
       code: HttpStatus.CONFLICT,
-      error: error.message
-  })
+      error: error.message,
+    });
+  }
 };
-}
 
 /**
  * Controller to update a user
@@ -48,14 +45,12 @@ export const signin = async (req, res, next) => {
     res.status(HttpStatus.ACCEPTED).json({
       code: HttpStatus.ACCEPTED,
       token: data,
-      message: 'User signin successfully'
+      message: "User signin successfully",
     });
   } catch (error) {
     res.status(HttpStatus.BAD_REQUEST).json({
       code: HttpStatus.BAD_REQUEST,
-      error: error.message
-  })
+      error: error.message,
+    });
   }
 };
-
-
