@@ -9,8 +9,8 @@ export const userAuth = async (req, res, next) => {
       throw new Error('Token Not provided');
 
     bearerToken = bearerToken.split(' ')[1];
-    const key='varshab111';
-    const { email } = await jwt.verify(bearerToken,key);
+    const secretKey = "sudokuPro";
+    const { email } = await jwt.verify(bearerToken,secretKey);
     req.body.email = email;
     req.body.token = bearerToken;
     next();

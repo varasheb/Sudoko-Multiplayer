@@ -4,7 +4,7 @@ export { DataTypes } from 'sequelize';
 
 let DATABASE = 'SudokuDB';
 let USERNAME = 'postgres';
-let PASSWORD = 'root';
+let PASSWORD = 'qwerty';
 let HOST = 'localhost';
 let PORT = 5432;
 let DIALECT = 'postgres';
