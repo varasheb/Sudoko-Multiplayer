@@ -21,9 +21,9 @@ export const signup = async (req, res) => {
   try {
     const data = await UserService.signup(req.body);
     res.status(HttpStatus.OK).json({
-      code: HttpStatus.OK,
-      data: data,
-      message: "User created successfully",
+      code: data.code,
+      data: data.data,
+      message: data.message,
     });
   } catch (error) {
     res.status(HttpStatus.CONFLICT).json({
