@@ -1,8 +1,8 @@
 import { isValidSudokuMove, generateBoard } from "../utils/games.util";
 import sequelize, { DataTypes } from "../config/database";
-import { Where } from "sequelize/lib/utils";
 
 const Games = require("../models/games.models")(sequelize, DataTypes);
+const User= require('../models/user.model')(sequelize, DataTypes);
 
 export const createnewgame = async ({ boardId, level, email }) => {
   const game = await Games.findOne({ where: { boardId } });
@@ -19,16 +19,28 @@ export const getgames = async () => {
   const records = await Games.findAll({
     attributes: ["boardId"],
   });
-  return records;
+  const boardIds = records.map(board => board.boardId);
+  return boardIds;
 };
 
-export const gethistory = async (email, boardId) => {
-  const board = await Games.findOne({ where: { boardId } });
-  if (!board) {
+export const gethistory = async (boardId) => {
+  const games = await Games.findOne({ where: { boardId } });
+  if (!games) {
     throw new Error("Board Id Incorrect");
   }
+  const moves=games.moveBy
+  return moves;
+};
 
-  return board.moveBy;
+export const deleteGame = async (email, boardId) => {
+  const games = await Games.destroy({ where: { boardId } });
+  if (!games) {
+    throw new Error("Board Id Incorrect");
+  }
+  const moves=games.moveBy[boardId]
+  const data = moves.filter(move => move.email === email);
+  const user=await User.findOne({ where :{email}})
+  return {moves:data,username:user.username};
 };
 
 export const updatemove = async ({ boardId, row, coloum, value, email }) => {
@@ -44,20 +56,20 @@ export const updatemove = async ({ boardId, row, coloum, value, email }) => {
   }
   board[i][j] = value;
 
-  if (!game.moveBy[boardId]) {
-    game.moveBy[boardId] = [];
+  if (!game.moveBy) {
+    game.moveBy= [];
   }
-  let move = game.moveBy[boardId];
+  let move = game.moveBy;
+  const user=await User.findOne({ where :{email},attributes: ["username"]})
+  move.push({ i, j, value, username:user.username });
+  game.moveBy = move;
 
-  move.push({ i, j, value, email });
-  game.moveBy[boardId] = move;
-
-  const data = await Games.update(
+  await Games.update(
     { board, moveBy: game.moveBy },
     { where: { boardId } }
   );
 
-  return data;
+  return board;
 };
 
 export const undoMove = async ({ boardId, email }) => {
@@ -67,11 +79,11 @@ export const undoMove = async ({ boardId, email }) => {
     throw new Error("Board not found");
   }
   const moves=game.moveBy;
-  if (!moves[boardId] || moves[boardId].length === 0) {
+  if (!moves || moves.length === 0) {
     throw new Error("No moves to undo");
   }
 
-  const lastMove = moves[boardId].pop();
+  const lastMove = moves.pop();
   const { i, j, email: usermail } = lastMove;
 
   if (!usermail === email) {

@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       moveBy:{
           type: DataTypes.JSONB,
           allowNull: false,
-          defaultValue: {}
+          defaultValue: []
         }
     },
     {

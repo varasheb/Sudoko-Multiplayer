@@ -19,6 +19,8 @@ router.get('/getboard/:id', userAuth, gameController.getboard);
 
 router.get('/history/:id', userAuth, gameController.gethistory);
 
+// router.get('/deletegame', isSudokuSolved, gameController.deleteGame);
+
 
 export default router;
 
