@@ -1,4 +1,3 @@
-import user from '../models/user.model';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import sequelize, { DataTypes } from '../config/database';
@@ -8,12 +7,13 @@ const User= require('../models/user.model')(sequelize, DataTypes);
 const key='varshab111';
 
 export const getuserInfo = async (email) => {
-
-  const user = await User.findOne({ where: { email } });
+  const [user , metadata] =await sequelize.query(`SELECT * FROM public."Users" WHERE "Users"."email" = '${email}';`);
+  // const user = await User.findOne({ where: { email } });
   if(!user)
   throw new Error("Invalid Token payload");
-  return user
+  return user[0]
 };
+
 
 //create new user
 export const signup = async (body) => {
